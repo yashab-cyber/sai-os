@@ -1,0 +1,80 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sai-os"
+version = "0.1.0"
+description = "SAI-OS — A Debian-based AI Operating System with natural language control"
+readme = "README.md"
+license = {text = "GPL-3.0-or-later"}
+requires-python = ">=3.11"
+authors = [
+    {name = "SAI-OS Team"},
+]
+keywords = ["ai", "operating-system", "linux", "debian", "natural-language", "llm"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Environment :: X11 Applications :: GTK",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Desktop Environment",
+    "Topic :: System :: Operating System",
+]
+dependencies = [
+    "ollama>=0.4.0",
+    "rich>=13.0",
+    "prompt-toolkit>=3.0",
+    "click>=8.1",
+    "pydantic>=2.0",
+    "psutil>=5.9",
+    "pydbus>=0.6",
+    "toml>=0.10",
+    "watchdog>=3.0",
+    "thefuzz[speedup]>=0.20",
+    "openai>=1.0",
+]
+
+[project.optional-dependencies]
+voice = [
+    "openai-whisper>=20230918",
+    "sounddevice>=0.4",
+    "numpy>=1.24",
+    "webrtcvad>=2.0",
+]
+desktop = [
+    "PyGObject>=3.44",
+]
+dev = [
+    "pytest>=7.4",
+    "pytest-asyncio>=0.21",
+    "mypy>=1.5",
+    "ruff>=0.1",
+]
+
+[project.scripts]
+sai = "sai_core.shell.cli:main"
+sai-daemon = "sai_core.daemon.sai_daemon:main"
+sai-desktop = "sai_desktop.app:main"
+
+[tool.setuptools.packages.find]
+include = ["sai_core*", "sai_desktop*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W"]
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
