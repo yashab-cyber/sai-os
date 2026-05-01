@@ -127,6 +127,7 @@ class SAIConfig:
             "package_manager",
             "media_player",
             "web_browser",
+            "screen_reader",
         ]
     )
 
