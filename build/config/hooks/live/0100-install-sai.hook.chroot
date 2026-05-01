@@ -1,0 +1,95 @@
+#!/bin/bash
+# SAI-OS Live Build Hook — Install SAI components into the chroot
+# This runs inside the chroot during ISO build
+
+set -e
+
+echo "========================================="
+echo "  SAI-OS Build Hook: Installing SAI Core"
+echo "========================================="
+
+# ── Install Ollama ──
+echo "[1/5] Installing Ollama..."
+curl -fsSL https://ollama.com/install.sh | sh
+
+# ── Create SAI user with sudo ──
+echo "[2/5] Configuring SAI user..."
+if ! id -u sai &>/dev/null; then
+    useradd -m -s /bin/bash -G sudo,audio,video,plugdev,netdev sai
+    echo "sai:sai" | chpasswd
+    echo "sai ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/sai
+fi
+
+# ── Install SAI-OS Python package ──
+echo "[3/5] Installing SAI-OS core..."
+cd /opt
+if [ -d "sai-os" ]; then
+    cd sai-os
+    pip3 install --break-system-packages -e "." || pip3 install -e "."
+else
+    echo "WARNING: sai-os source not found at /opt/sai-os"
+fi
+
+# ── Pull default LLM model ──
+echo "[4/5] Downloading AI model (this may take a while)..."
+# Start ollama temporarily to pull the model
+ollama serve &
+OLLAMA_PID=$!
+sleep 5
+ollama pull llama3.2:3b || echo "Model download deferred to first boot"
+kill $OLLAMA_PID 2>/dev/null || true
+
+# ── Configure auto-login and session ──
+echo "[5/5] Configuring desktop session..."
+
+# Create Wayfire session desktop entry
+cat > /usr/share/wayland-sessions/sai-desktop.desktop << 'EOF'
+[Desktop Entry]
+Name=SAI-OS Desktop
+Comment=AI-Powered Desktop Environment
+Exec=/usr/local/bin/sai-session
+Type=Application
+DesktopNames=SAI
+EOF
+
+# Create session launcher script
+cat > /usr/local/bin/sai-session << 'SCRIPT'
+#!/bin/bash
+# SAI-OS Session Launcher
+
+# Set environment
+export XDG_CURRENT_DESKTOP=SAI
+export SAI_SESSION=1
+export GTK_THEME=sai-dark
+
+# Start SAI daemon in background
+sai-daemon &
+
+# Start Ollama in background
+ollama serve &
+
+# Launch Wayfire with SAI config
+exec wayfire
+SCRIPT
+chmod +x /usr/local/bin/sai-session
+
+# Enable auto-login via getty
+mkdir -p /etc/systemd/system/getty@tty1.service.d
+cat > /etc/systemd/system/getty@tty1.service.d/autologin.conf << 'EOF'
+[Service]
+ExecStart=
+ExecStart=-/sbin/agetty --autologin sai --noclear %I $TERM
+EOF
+
+# Auto-start desktop session on login
+cat >> /etc/skel/.bash_profile << 'EOF'
+
+# Auto-start SAI Desktop
+if [ -z "$DISPLAY" ] && [ -z "$WAYLAND_DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
+    exec sai-session
+fi
+EOF
+
+echo "========================================="
+echo "  SAI-OS Build Hook: Complete!"
+echo "========================================="
