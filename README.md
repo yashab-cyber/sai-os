@@ -64,7 +64,7 @@ Kernel
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/sai-os.git
+git clone https://github.com/yashab-cyber/sai-os.git
 cd sai-os
 
 # Install dependencies
@@ -85,6 +85,7 @@ make iso
 
 - [Architecture Guide](docs/ARCHITECTURE.md)
 - [User Guide](docs/USER_GUIDE.md)
+- [ISO Build Guide](docs/isobuild.md)
 
 ## 🛡️ Privacy & Security
 
