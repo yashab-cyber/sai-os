@@ -59,6 +59,15 @@ def main() -> None:
         except Exception as e:
             logger.error(f"Assistant failed: {e}")
 
+        # Launch dynamic widgets
+        try:
+            from sai_desktop.widgets import WidgetManager
+            widget_manager = WidgetManager()
+            widget_manager.start()
+            logger.info("Dynamic Widgets started.")
+        except Exception as e:
+            logger.error(f"Widgets failed: {e}")
+
     app.connect("activate", on_activate)
     app.run(sys.argv)
 
