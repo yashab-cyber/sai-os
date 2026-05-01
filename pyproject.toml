@@ -40,10 +40,12 @@ dependencies = [
 
 [project.optional-dependencies]
 voice = [
-    "openai-whisper>=20230918",
+    "edge-tts>=6.0",
     "sounddevice>=0.4",
+    "soundfile>=0.12",
     "numpy>=1.24",
-    "webrtcvad>=2.0",
+    "pvporcupine>=3.0",
+    "faster-whisper>=0.9",
 ]
 desktop = [
     "PyGObject>=3.44",
@@ -57,6 +59,7 @@ dev = [
 
 [project.scripts]
 sai = "sai_core.shell.cli:main"
+sai-voice = "sai_core.voice.engine:main"
 sai-daemon = "sai_core.daemon.sai_daemon:main"
 sai-desktop = "sai_desktop.app:main"
 
