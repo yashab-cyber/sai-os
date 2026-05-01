@@ -29,6 +29,9 @@ class SAIDaemon:
         self._monitor = None
         self._notifier = None
         self._scheduler = None
+        self._event_bus = None
+        self._trigger_engine = None
+        self._proactive_agent = None
 
     async def start(self) -> None:
         """Start all daemon services."""
@@ -44,12 +47,28 @@ class SAIDaemon:
         self._notifier = SmartNotifier()
         self._scheduler = TaskScheduler()
 
+        # Initialize proactive system
+        if self.config.daemon.proactive_enabled:
+            from sai_core.daemon.event_bus import EventBus
+            from sai_core.daemon.proactive_agent import ProactiveAgent
+            from sai_core.daemon.triggers import TriggerEngine
+            
+            self._event_bus = EventBus()
+            self._trigger_engine = TriggerEngine.load_rules(self.config.daemon)
+            self._proactive_agent = ProactiveAgent(self._notifier)
+            
+            await self._proactive_agent.initialize()
+            self._event_bus.subscribe(self._on_system_event)
+
         # Run all services concurrently
         tasks = [
             asyncio.create_task(self._monitor_loop()),
             asyncio.create_task(self._scheduler_loop()),
             asyncio.create_task(self._ollama_watchdog()),
         ]
+        
+        if self._event_bus:
+            tasks.append(asyncio.create_task(self._event_bus.start()))
 
         logger.info("SAI Daemon running.")
 
@@ -98,8 +117,21 @@ class SAIDaemon:
                 )
             await asyncio.sleep(300)  # Check every 5 minutes
 
+    async def _on_system_event(self, event) -> None:
+        """Handle incoming system events from the event bus."""
+        if not self._trigger_engine or not self._proactive_agent:
+            return
+            
+        rule = self._trigger_engine.evaluate(event)
+        if rule:
+            await self._proactive_agent.handle_trigger(rule, event)
+
     def stop(self) -> None:
         self._running = False
+        if self._event_bus:
+            self._event_bus.stop()
+        if self._proactive_agent:
+            self._proactive_agent.shutdown()
 
 
 def _setup_logging() -> None:

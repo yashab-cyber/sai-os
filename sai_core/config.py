@@ -94,6 +94,9 @@ class DaemonConfig:
     auto_cleanup: bool = True
     cleanup_schedule: str = "weekly"
     auto_update_check: bool = True
+    # Proactive triggers
+    proactive_enabled: bool = True
+    triggers_file: str = ""
 
 
 @dataclass
@@ -128,6 +131,7 @@ class SAIConfig:
             "media_player",
             "web_browser",
             "screen_reader",
+            "power_manager",
         ]
     )
 
@@ -197,6 +201,8 @@ class SAIConfig:
                 "disk_threshold": self.daemon.disk_threshold,
                 "auto_cleanup": self.daemon.auto_cleanup,
                 "auto_update_check": self.daemon.auto_update_check,
+                "proactive_enabled": self.daemon.proactive_enabled,
+                "triggers_file": self.daemon.triggers_file,
             },
             "desktop": {
                 "compositor": self.desktop.compositor,

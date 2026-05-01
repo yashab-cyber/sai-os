@@ -36,6 +36,7 @@ dependencies = [
     "watchdog>=3.0",
     "thefuzz[speedup]>=0.20",
     "openai>=1.0",
+    "pyyaml>=6.0",
 ]
 
 [project.optional-dependencies]
@@ -62,9 +63,10 @@ sai = "sai_core.shell.cli:main"
 sai-voice = "sai_core.voice.engine:main"
 sai-daemon = "sai_core.daemon.sai_daemon:main"
 sai-desktop = "sai_desktop.app:main"
+sai-install = "sai_installer.app:main"
 
 [tool.setuptools.packages.find]
-include = ["sai_core*", "sai_desktop*"]
+include = ["sai_core*", "sai_desktop*", "sai_installer*"]
 
 [tool.ruff]
 line-length = 100
