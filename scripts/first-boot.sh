@@ -29,17 +29,30 @@ if [ ! -f ~/.config/sai/config.toml ]; then
     cp /etc/skel/.config/sai/config.toml ~/.config/sai/config.toml 2>/dev/null || true
 fi
 
-# Start Ollama if not running
-if ! pgrep -x ollama >/dev/null; then
-    echo "🧠 Starting AI engine..."
-    ollama serve &
-    sleep 3
-fi
+# ── AI Backend Setup ──
+# Check if backend is already configured
+SAI_BACKEND=$(grep -oP 'backend\s*=\s*"\K[^"]+' ~/.config/sai/config.toml 2>/dev/null || echo "")
 
-# Check if model is available
-if ! ollama list 2>/dev/null | grep -q "llama3.2"; then
-    echo "📥 Downloading AI model (first time only, ~2GB)..."
-    ollama pull llama3.2:3b
+if [ -z "$SAI_BACKEND" ]; then
+    echo "🧠 Let's set up your AI engine..."
+    echo ""
+
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    SETUP_SCRIPT="${SCRIPT_DIR}/setup-backend.sh"
+
+    # Try multiple locations for the setup script
+    if [ -f "$SETUP_SCRIPT" ]; then
+        bash "$SETUP_SCRIPT"
+    elif [ -f "/opt/sai-os/scripts/setup-backend.sh" ]; then
+        bash /opt/sai-os/scripts/setup-backend.sh
+    elif command -v sai-setup-backend &>/dev/null; then
+        sai-setup-backend
+    else
+        echo "⚠️  Backend setup script not found."
+        echo "   Configure later: edit ~/.config/sai/config.toml"
+    fi
+else
+    echo "✅ AI backend already configured: $SAI_BACKEND"
 fi
 
 echo ""
@@ -50,6 +63,10 @@ echo "   • Type 'sai' to open the AI Shell"
 echo "   • Type 'sai \"help\"' for examples"
 echo "   • Press Super+A for the AI Assistant"
 echo "   • Press Super+Enter for the SAI Terminal"
+echo ""
+echo "🔧 Change AI backend anytime:"
+echo "   • Run: sai-setup-backend"
+echo "   • Or in SAI Shell: backend ollama / backend api / backend copilot"
 echo ""
 
 # Mark first boot as done

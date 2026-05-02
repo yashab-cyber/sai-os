@@ -1,6 +1,9 @@
 #!/bin/bash
 # SAI-OS Live Build Hook — Install SAI components into the chroot
 # This runs inside the chroot during ISO build
+#
+# NOTE: Ollama / AI backends are NOT installed here.
+# The user chooses their backend on first boot or via sai-setup-backend.
 
 set -e
 
@@ -8,12 +11,8 @@ echo "========================================="
 echo "  SAI-OS Build Hook: Installing SAI Core"
 echo "========================================="
 
-# ── Install Ollama ──
-echo "[1/5] Installing Ollama..."
-curl -fsSL https://ollama.com/install.sh | sh
-
 # ── Create SAI user with sudo ──
-echo "[2/5] Configuring SAI user..."
+echo "[1/3] Configuring SAI user..."
 if ! id -u sai &>/dev/null; then
     useradd -m -s /bin/bash -G sudo,audio,video,plugdev,netdev sai
     echo "sai:sai" | chpasswd
@@ -21,7 +20,7 @@ if ! id -u sai &>/dev/null; then
 fi
 
 # ── Install SAI-OS Python package ──
-echo "[3/5] Installing SAI-OS core..."
+echo "[2/3] Installing SAI-OS core..."
 cd /opt
 if [ -d "sai-os" ]; then
     cd sai-os
@@ -30,17 +29,8 @@ else
     echo "WARNING: sai-os source not found at /opt/sai-os"
 fi
 
-# ── Pull default LLM model ──
-echo "[4/5] Downloading AI model (this may take a while)..."
-# Start ollama temporarily to pull the model
-ollama serve &
-OLLAMA_PID=$!
-sleep 5
-ollama pull llama3.2:3b || echo "Model download deferred to first boot"
-kill $OLLAMA_PID 2>/dev/null || true
-
 # ── Configure auto-login and session ──
-echo "[5/5] Configuring desktop session..."
+echo "[3/3] Configuring desktop session..."
 
 # Create Wayfire session desktop entry
 cat > /usr/share/wayland-sessions/sai-desktop.desktop << 'EOF'
@@ -65,8 +55,13 @@ export GTK_THEME=sai-dark
 # Start SAI daemon in background
 sai-daemon &
 
-# Start Ollama in background
-ollama serve &
+# Start Ollama only if installed AND configured as the backend
+if command -v ollama &>/dev/null; then
+    SAI_BACKEND=$(grep -oP 'backend\s*=\s*"\K[^"]+' ~/.config/sai/config.toml 2>/dev/null || echo "")
+    if [ "$SAI_BACKEND" = "ollama" ]; then
+        ollama serve &
+    fi
+fi
 
 # Launch Wayfire with SAI config
 exec wayfire

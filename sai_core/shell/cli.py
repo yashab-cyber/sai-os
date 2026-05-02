@@ -102,6 +102,26 @@ async def _run_interactive() -> None:
             brain.clear_context()
             print_success("Context cleared.")
             continue
+        elif user_input.lower().startswith("backend"):
+            parts = user_input.split(maxsplit=1)
+            if len(parts) == 1:
+                console.print(f"  [cyan]Current backend:[/] {config.llm.backend} @ {config.llm.host} ({config.llm.default_model})")
+            else:
+                cmd = parts[1].strip()
+                if cmd == "ollama":
+                    print_success(brain.set_backend("ollama", "http://localhost:11434"))
+                elif cmd.startswith("api"):
+                    api_parts = cmd.split(maxsplit=1)
+                    key = api_parts[1] if len(api_parts) > 1 else ""
+                    print_success(brain.set_backend("openai", "https://api.openai.com", key))
+                elif cmd == "copilot":
+                    print_success(brain.set_backend("openai", "http://localhost:4141"))
+                elif cmd == "save":
+                    config.save()
+                    print_success("Backend configuration saved.")
+                else:
+                    print_warning("Unknown backend command. Try: backend [ollama | api <key> | copilot | save]")
+            continue
 
         completer.add_to_history(user_input)
         print_thinking()
@@ -190,6 +210,7 @@ def _print_help() -> None:
     • [cyan]reset[/]   — Reset conversation context
     • [cyan]help[/]    — Show this help
     • [cyan]exit[/]    — Exit SAI Shell
+    • [cyan]backend[/] — Manage AI backend (ollama | api | copilot | save)
 """)
 
 
