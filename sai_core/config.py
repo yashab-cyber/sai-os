@@ -35,12 +35,13 @@ class LLMConfig:
       - 'anthropic': Anthropic Claude API (requires api_key)
     """
 
-    # Backend selection: 'ollama', 'openai', 'anthropic'
-    backend: str = "openai"
+    # Backend selection: 'ollama', 'openai', 'copilot-api', 'anthropic'
+    # Empty string means unconfigured — will prompt user for setup
+    backend: str = ""
     # API endpoint
-    host: str = "http://localhost:4141"
+    host: str = "http://localhost:11434"
     # Model to use (depends on backend)
-    default_model: str = "gpt-4o"
+    default_model: str = "llama3.2:3b"
     full_model: str = "gpt-4o"
     temperature: float = 0.3
     max_tokens: int = 2048
