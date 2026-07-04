@@ -115,15 +115,26 @@ class AssistantWindow:
         main_box.add_css_class("assistant-window")
         self.window.set_child(main_box)
 
-        # Header
-        header = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
+        # Header (Horizontal: Logo | Text Info)
+        header = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
         header.add_css_class("assistant-header")
-        title = Gtk.Label(label="🧠 OpenOS Assistant", xalign=0)
+
+        # Logo image
+        from pathlib import Path
+        logo_path = Path(__file__).parents[2] / "public" / "logo.png"
+        if logo_path.exists():
+            logo_img = Gtk.Image.new_from_file(str(logo_path))
+            logo_img.set_pixel_size(32)
+            header.append(logo_img)
+
+        header_text = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
+        title = Gtk.Label(label="OpenOS Assistant", xalign=0)
         title.add_css_class("assistant-title")
         subtitle = Gtk.Label(label="Ask me anything about your system", xalign=0)
         subtitle.add_css_class("assistant-subtitle")
-        header.append(title)
-        header.append(subtitle)
+        header_text.append(title)
+        header_text.append(subtitle)
+        header.append(header_text)
         main_box.append(header)
 
         # Chat area

@@ -60,6 +60,15 @@ class InstallerWindow(Gtk.ApplicationWindow):
         self.sidebar.add_css_class("sidebar")
         self.sidebar.set_size_request(250, -1)
 
+        # Logo
+        logo_path = Path(__file__).parent.parent / "public" / "logo.png"
+        if logo_path.exists():
+            logo_image = Gtk.Image.new_from_file(str(logo_path))
+            logo_image.set_pixel_size(128)
+            logo_image.set_halign(Gtk.Align.CENTER)
+            logo_image.set_margin_bottom(20)
+            self.sidebar.append(logo_image)
+
         title = Gtk.Label(label="Installation Setup")
         title.add_css_class("title")
         title.set_halign(Gtk.Align.START)

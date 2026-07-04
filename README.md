@@ -1,6 +1,10 @@
 # 🧠 OpenOS — The AI Operating System
 
 <p align="center">
+  <img src="public/logo.png" alt="OpenOS Logo" width="200" />
+</p>
+
+<p align="center">
   <strong>A Debian-based operating system where AI is the interface.</strong><br>
   Talk to your computer. It understands.
 </p>

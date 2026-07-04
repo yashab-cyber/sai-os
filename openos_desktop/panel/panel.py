@@ -111,10 +111,21 @@ class OpenOSPanel:
         hbox.add_css_class("openos-panel")
         self.window.set_child(hbox)
 
-        # Brand label
-        brand = Gtk.Label(label="⚡ OpenOS")
+        # Brand container (Horizontal box for logo + text)
+        brand_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+        brand_box.add_css_class("openos-brand-box")
+
+        from pathlib import Path
+        logo_path = Path(__file__).parents[2] / "public" / "logo.png"
+        if logo_path.exists():
+            logo_img = Gtk.Image.new_from_file(str(logo_path))
+            logo_img.set_pixel_size(18)
+            brand_box.append(logo_img)
+
+        brand = Gtk.Label(label="OpenOS")
         brand.add_css_class("openos-brand")
-        hbox.append(brand)
+        brand_box.append(brand)
+        hbox.append(brand_box)
 
         # Spacer
         spacer1 = Gtk.Box()
