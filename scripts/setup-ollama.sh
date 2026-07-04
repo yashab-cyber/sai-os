@@ -1,10 +1,10 @@
 #!/bin/bash
-# SAI-OS Ollama Setup Script
+# OpenOS Ollama Setup Script
 # Installs Ollama and downloads the default AI model
 
 set -e
 
-echo "🧠 SAI-OS — Setting up AI Engine"
+echo "🧠 OpenOS — Setting up AI Engine"
 echo "================================="
 
 # Check if Ollama is already installed
@@ -35,4 +35,4 @@ ollama pull llama3.2:3b
 echo ""
 echo "✅ AI Engine is ready!"
 echo ""
-echo "Test it with: sai \"hello, what can you do?\""
+echo "Test it with: openos \"hello, what can you do?\""

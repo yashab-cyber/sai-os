@@ -1,6 +1,6 @@
-# SAI-OS ISO Build Guide
+# OpenOS ISO Build Guide
 
-This document outlines the detailed steps required to build the bootable live ISO for SAI-OS.
+This document outlines the detailed steps required to build the bootable live ISO for OpenOS.
 
 ## Prerequisites
 
@@ -56,5 +56,5 @@ build/live-image-amd64.hybrid.iso
 
 - **Permission Denied**: Building an ISO requires root privileges because it creates a `chroot` environment and modifies loop devices. Ensure you use `sudo`.
 - **Disk Space**: The build process requires significant disk space. Ensure you have at least 15-20 GB of free space available.
-- **Cache Issues**: If you modified dependencies in `build/config/package-lists/sai-os.list.chroot` and they are not appearing, ensure you run `sudo lb clean` before building to clear the cache.
+- **Cache Issues**: If you modified dependencies in `build/config/package-lists/openos.list.chroot` and they are not appearing, ensure you run `sudo lb clean` before building to clear the cache.
 - **Ollama Download**: The build hook temporarily starts Ollama to pull the `llama3.2:3b` model. If your network connection is interrupted, the ISO will simply defer the model download until the first boot.

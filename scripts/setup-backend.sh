@@ -1,22 +1,22 @@
 #!/bin/bash
-# SAI-OS AI Backend Setup Script
+# OpenOS AI Backend Setup Script
 # Can be run standalone or called from first-boot.sh
 #
 # Usage:
-#   sai-setup-backend          # Interactive wizard
-#   sai-setup-backend ollama   # Direct Ollama setup
-#   sai-setup-backend api      # Direct OpenAI API setup
-#   sai-setup-backend copilot  # Direct copilot-api setup
+#   openos-setup-backend          # Interactive wizard
+#   openos-setup-backend ollama   # Direct Ollama setup
+#   openos-setup-backend api      # Direct OpenAI API setup
+#   openos-setup-backend copilot  # Direct copilot-api setup
 
 set -e
 
-SAI_CONFIG_DIR="${HOME}/.config/sai"
-SAI_CONFIG_FILE="${SAI_CONFIG_DIR}/config.toml"
+OPENOS_CONFIG_DIR="${HOME}/.config/openos"
+OPENOS_CONFIG_FILE="${OPENOS_CONFIG_DIR}/config.toml"
 
 # ── Helpers ──
 
 ensure_config_dir() {
-    mkdir -p "$SAI_CONFIG_DIR"
+    mkdir -p "$OPENOS_CONFIG_DIR"
 }
 
 write_backend_config() {
@@ -28,12 +28,12 @@ write_backend_config() {
     ensure_config_dir
 
     # If config exists, update the [llm] section; otherwise create it
-    if [ -f "$SAI_CONFIG_FILE" ]; then
+    if [ -f "$OPENOS_CONFIG_FILE" ]; then
         # Use a temp file to replace the llm section
         python3 -c "
 import toml, sys
 try:
-    cfg = toml.load('$SAI_CONFIG_FILE')
+    cfg = toml.load('$OPENOS_CONFIG_FILE')
 except:
     cfg = {}
 cfg.setdefault('llm', {})
@@ -42,12 +42,12 @@ cfg['llm']['host'] = '$host'
 cfg['llm']['default_model'] = '$model'
 if '$api_key':
     cfg['llm']['api_key'] = '$api_key'
-with open('$SAI_CONFIG_FILE', 'w') as f:
+with open('$OPENOS_CONFIG_FILE', 'w') as f:
     toml.dump(cfg, f)
 print('Config updated.')
 " 2>/dev/null || {
             # Fallback: write minimal config if python fails
-            cat > "$SAI_CONFIG_FILE" << TOML
+            cat > "$OPENOS_CONFIG_FILE" << TOML
 [llm]
 backend = "$backend"
 host = "$host"
@@ -56,7 +56,7 @@ api_key = "$api_key"
 TOML
         }
     else
-        cat > "$SAI_CONFIG_FILE" << TOML
+        cat > "$OPENOS_CONFIG_FILE" << TOML
 [llm]
 backend = "$backend"
 host = "$host"
@@ -68,7 +68,7 @@ timeout = 120
 auto_upgrade = true
 
 [shell]
-prompt_symbol = "sai>"
+prompt_symbol = "openos>"
 show_thinking = false
 confirm_destructive = true
 history_size = 1000
@@ -163,7 +163,7 @@ setup_api() {
 
     read -p "API Key: " api_key
     if [ -z "$api_key" ]; then
-        echo "⚠️  No API key provided. You can set it later in ~/.config/sai/config.toml"
+        echo "⚠️  No API key provided. You can set it later in ~/.config/openos/config.toml"
     fi
 
     read -p "Model name [default: gpt-4o]: " model_name
@@ -201,7 +201,7 @@ show_menu() {
     echo ""
     echo "╔═══════════════════════════════════════════════════╗"
     echo "║                                                   ║"
-    echo "║     ⚡ SAI-OS — AI Backend Setup                  ║"
+    echo "║     ⚡ OpenOS — AI Backend Setup                  ║"
     echo "║                                                   ║"
     echo "╠═══════════════════════════════════════════════════╣"
     echo "║                                                   ║"
@@ -222,8 +222,8 @@ show_menu() {
         3) setup_copilot ;;
         4)
             echo ""
-            echo "⏭️  Skipped. Configure later with: sai-setup-backend"
-            echo "   Or edit: ~/.config/sai/config.toml"
+            echo "⏭️  Skipped. Configure later with: openos-setup-backend"
+            echo "   Or edit: ~/.config/openos/config.toml"
             # Write minimal config with empty backend
             write_backend_config "" "http://localhost:11434" "llama3.2:3b" ""
             ;;
@@ -242,7 +242,7 @@ case "${1:-}" in
     copilot) setup_copilot ;;
     "")      show_menu ;;
     *)
-        echo "Usage: sai-setup-backend [ollama|api|copilot]"
+        echo "Usage: openos-setup-backend [ollama|api|copilot]"
         echo ""
         echo "  ollama   — Install & configure Ollama (local AI)"
         echo "  api      — Configure OpenAI-compatible cloud API"

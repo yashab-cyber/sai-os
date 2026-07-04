@@ -1,4 +1,4 @@
-# 🧠 SAI-OS — The AI Operating System
+# 🧠 OpenOS — The AI Operating System
 
 <p align="center">
   <strong>A Debian-based operating system where AI is the interface.</strong><br>
@@ -7,20 +7,20 @@
 
 ---
 
-## 🌟 What is SAI-OS?
+## 🌟 What is OpenOS?
 
-SAI-OS replaces traditional menus, terminals, and app launchers with a single AI interface.
+OpenOS replaces traditional menus, terminals, and app launchers with a single AI interface.
 Instead of remembering commands or clicking through menus, just say what you want:
 
 ```
-sai "open my project files"
-sai "clean my system"
-sai "prepare my work setup"
-sai "play some music"
+openos "open my project files"
+openos "clean my system"
+openos "prepare my work setup"
+openos "play some music"
 ```
 
 **Normal OS:** User → App → Action
-**SAI-OS:** User → AI → Action
+**OpenOS:** User → AI → Action
 
 ## ✨ Key Features
 
@@ -34,7 +34,7 @@ sai "play some music"
 | 🔧 **Self-Maintenance** | Auto-clean, update, and optimize your system |
 | 🔔 **Intelligent Notifications** | Only useful alerts, never spam |
 | 🤖 **Built-in AI Assistant** | ChatGPT-style assistant that knows your system |
-| 🎙️ **Voice Control** | "Hey SAI, open YouTube" |
+| 🎙️ **Voice Control** | "Hey OpenOS, open YouTube" |
 | 🧩 **Modular Design** | Add/remove AI modules and plugins |
 
 ## 🏗️ Architecture
@@ -64,14 +64,14 @@ Kernel
 
 ```bash
 # Clone the repository
-git clone https://github.com/yashab-cyber/sai-os.git
-cd sai-os
+git clone https://github.com/yashab-cyber/openos.git
+cd openos
 
 # Install dependencies
 make install
 
-# Start using SAI
-sai "hello, what can you do?"
+# Start using OpenOS
+openos "hello, what can you do?"
 ```
 
 ### Build ISO

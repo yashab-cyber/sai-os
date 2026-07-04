@@ -6,7 +6,7 @@ VENV := .venv
 VENV_BIN := $(VENV)/bin
 
 help: ## Show this help message
-	@echo "SAI-OS Build System"
+	@echo "OpenOS Build System"
 	@echo "==================="
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | \
 		awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -15,7 +15,7 @@ venv: ## Create virtual environment
 	$(PYTHON) -m venv $(VENV)
 	$(VENV_BIN)/pip install --upgrade pip setuptools wheel
 
-install: venv ## Install SAI-OS core
+install: venv ## Install OpenOS core
 	$(VENV_BIN)/pip install -e ".[dev]"
 
 install-voice: install ## Install with voice support
@@ -34,11 +34,11 @@ test: ## Run test suite
 	$(VENV_BIN)/python -m pytest tests/ -v --tb=short
 
 lint: ## Run linters
-	$(VENV_BIN)/python -m ruff check sai_core/ sai_desktop/
-	$(VENV_BIN)/python -m mypy sai_core/
+	$(VENV_BIN)/python -m ruff check openos_core/ openos_desktop/
+	$(VENV_BIN)/python -m mypy openos_core/
 
 format: ## Auto-format code
-	$(VENV_BIN)/python -m ruff format sai_core/ sai_desktop/
+	$(VENV_BIN)/python -m ruff format openos_core/ openos_desktop/
 
 clean: ## Clean build artifacts
 	rm -rf build/live-image-*.iso
@@ -51,11 +51,11 @@ iso: ## Build bootable ISO (requires root + live-build)
 	cd build && sudo lb clean && sudo lb config && sudo lb build
 	@echo "\n✅ ISO built: build/live-image-amd64.hybrid.iso"
 
-run-shell: ## Launch SAI Shell
-	$(VENV_BIN)/sai
+run-shell: ## Launch OpenOS Shell
+	$(VENV_BIN)/openos
 
-run-daemon: ## Launch SAI Daemon
-	$(VENV_BIN)/sai-daemon
+run-daemon: ## Launch OpenOS Daemon
+	$(VENV_BIN)/openos-daemon
 
-run-desktop: ## Launch SAI Desktop Shell
-	$(VENV_BIN)/sai-desktop
+run-desktop: ## Launch OpenOS Desktop Shell
+	$(VENV_BIN)/openos-desktop

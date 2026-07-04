@@ -172,7 +172,7 @@ cython_debug/
 /.build/
 /build.log
 
-# SAI OS Data
+# OpenOS OS Data
 .local/
 .config/
 .cache/
