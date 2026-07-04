@@ -98,6 +98,16 @@ make iso
 - **Safety Confirmations** — Destructive commands always require explicit approval
 - **Open Source** — Every line of code is auditable
 
+## 💖 Support & Connect
+
+If you'd like to support the development of OpenOS or connect with the creator, feel free to reach out:
+
+* **Support/Donations**: See [donate.md](donate.md) (inquiries at [yashabalam9@gmail.com](mailto:yashabalam9@gmail.com) / [yashabalam707@gmail.com](mailto:yashabalam707@gmail.com))
+* **X / Twitter**: [@Yashab_cyber](https://x.com/Yashab_cyber)
+* **LinkedIn**: [Yashab Alam](https://www.linkedin.com/in/yashab-alam)
+* **Instagram**: [@yashabcyber](https://www.instagram.com/yashabcyber)
+* **Threads**: [@yashabcyber](https://www.threads.net/@yashabcyber)
+
 ## 📜 License
 
 GPL-3.0-or-later — Free as in freedom.

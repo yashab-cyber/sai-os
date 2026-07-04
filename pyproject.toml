@@ -10,7 +10,7 @@ readme = "README.md"
 license = {text = "GPL-3.0-or-later"}
 requires-python = ">=3.11"
 authors = [
-    {name = "OpenOS Team"},
+    {name = "Yashab Alam", email = "yashabalam9@gmail.com"},
 ]
 keywords = ["ai", "operating-system", "linux", "debian", "natural-language", "llm"]
 classifiers = [
