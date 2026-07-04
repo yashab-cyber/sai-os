@@ -132,7 +132,7 @@ class FileManagerTool(BaseTool):
     )
     def search_files(self, query: str, path: str = "~") -> str:
         target = Path(path).expanduser().resolve()
-        results = []
+        results: list[str] = []
         for item in target.rglob(f"*{query}*"):
             if len(results) >= 20:
                 break
@@ -191,8 +191,9 @@ class FileManagerTool(BaseTool):
 
 def _human_size(size_bytes: int) -> str:
     """Convert bytes to human-readable size."""
+    val = float(size_bytes)
     for unit in ["B", "KB", "MB", "GB", "TB"]:
-        if size_bytes < 1024:
-            return f"{size_bytes:.1f}{unit}"
-        size_bytes /= 1024
-    return f"{size_bytes:.1f}PB"
+        if val < 1024:
+            return f"{val:.1f}{unit}"
+        val /= 1024
+    return f"{val:.1f}PB"

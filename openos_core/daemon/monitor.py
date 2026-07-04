@@ -104,8 +104,9 @@ class SystemMonitor:
 
 
 def _hs(b: int) -> str:
+    val = float(b)
     for u in ["B", "KB", "MB", "GB", "TB"]:
-        if b < 1024:
-            return f"{b:.1f}{u}"
-        b /= 1024
-    return f"{b:.1f}PB"
+        if val < 1024:
+            return f"{val:.1f}{u}"
+        val /= 1024
+    return f"{val:.1f}PB"

@@ -257,7 +257,7 @@ def _check_single_condition(cond: str, data: dict[str, Any]) -> bool:
         if not op_fn:
             return False
         try:
-            return op_fn(data[key], _parse_value(raw_val))
+            return bool(op_fn(data[key], _parse_value(raw_val)))
         except (TypeError, ValueError):
             return False
 

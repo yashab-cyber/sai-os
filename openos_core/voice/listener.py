@@ -85,6 +85,7 @@ class VoiceListener:
         """Listen using Porcupine wake word engine."""
         import sounddevice as sd
 
+        assert self._porcupine is not None
         frame_length = self._porcupine.frame_length
 
         def audio_callback(indata, frames, time_info, status):

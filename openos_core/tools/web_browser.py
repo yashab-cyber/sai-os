@@ -36,7 +36,7 @@ class WebBrowserTool(BaseTool):
                 url = f"https://{url}"
             else:
                 # Treat as search query
-                return self.search_web(query=url)
+                return str(self.search_web(query=url))
         try:
             subprocess.Popen(
                 ["xdg-open", url],
@@ -78,4 +78,4 @@ class WebBrowserTool(BaseTool):
             url = f"https://www.youtube.com/results?search_query={encoded}"
         else:
             url = "https://www.youtube.com"
-        return self.open_url(url)
+        return str(self.open_url(url))

@@ -377,7 +377,8 @@ class EventBus:
 
         for callback in self._subscribers:
             try:
-                asyncio.run_coroutine_threadsafe(callback(event), self._loop)
+                coro: Any = callback(event)
+                asyncio.run_coroutine_threadsafe(coro, self._loop)
             except Exception as e:
                 logger.error(f"Failed to dispatch event to subscriber: {e}")
 

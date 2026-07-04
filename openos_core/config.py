@@ -150,7 +150,17 @@ class OpenOSConfig:
                     daemon=DaemonConfig(**data.get("daemon", {})),
                     desktop=DesktopConfig(**data.get("desktop", {})),
                     enabled_modules=data.get("modules", {}).get(
-                        "enabled", cls.__dataclass_fields__["enabled_modules"].default_factory()
+                        "enabled", [
+                            "file_manager",
+                            "system_maintenance",
+                            "app_launcher",
+                            "window_manager",
+                            "package_manager",
+                            "media_player",
+                            "web_browser",
+                            "screen_reader",
+                            "power_manager",
+                        ]
                     ),
                 )
             except Exception:

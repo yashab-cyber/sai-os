@@ -89,6 +89,6 @@ class InstallerAgent:
 
         try:
             result = await self._brain.process(text)
-            return result.get("response", "No response generated.")
+            return str(result.get("response", "No response generated."))
         except Exception as e:
             return f"Error: {str(e)}"

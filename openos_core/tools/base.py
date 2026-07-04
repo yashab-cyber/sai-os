@@ -49,8 +49,9 @@ def tool_function(
         def wrapper(*args, **kwargs):
             return func(*args, **kwargs)
 
-        wrapper._tool_function = True
-        wrapper._tool_description = description
+        wrapper_any: Any = wrapper
+        wrapper_any._tool_function = True
+        wrapper_any._tool_description = description
         # Clean up non-standard 'optional' keys for strict JSON Schema compliance
         cleaned_parameters = {}
         required = []
@@ -61,14 +62,14 @@ def tool_function(
                 required.append(k)
             cleaned_parameters[k] = cleaned_v
 
-        wrapper._tool_parameters = {
+        wrapper_any._tool_parameters = {
             "type": "object",
             "properties": cleaned_parameters,
             "required": required,
         }
-        wrapper._is_destructive = destructive
+        wrapper_any._is_destructive = destructive
         if confirm_message:
-            wrapper._confirm_message = lambda args: confirm_message.format(**args)
+            wrapper_any._confirm_message = lambda args: confirm_message.format(**args)
         return wrapper
 
     return decorator

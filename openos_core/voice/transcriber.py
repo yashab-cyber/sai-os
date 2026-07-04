@@ -105,6 +105,7 @@ class Transcriber:
                 tmp_path = f.name
 
             try:
+                assert self._local_model is not None
                 segments, info = self._local_model.transcribe(
                     tmp_path,
                     language=language,

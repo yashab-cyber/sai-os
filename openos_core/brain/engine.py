@@ -273,7 +273,7 @@ class OpenOSBrain:
 
     @property
     def is_ready(self) -> bool:
-        return self._initialized
+        return bool(self._initialized)
 
     @property
     def backend_name(self) -> str:
@@ -301,11 +301,12 @@ class OpenOSBrain:
                 }
 
         self._messages.append({"role": "user", "content": user_input})
-        actions_taken = []
+        actions_taken: list[Any] = []
         max_rounds = 10  # Safety limit on tool-call loops
 
         for _ in range(max_rounds):
             try:
+                assert self._backend is not None
                 result = self._backend.chat(
                     model=self._model,
                     messages=self._messages,
@@ -388,6 +389,7 @@ class OpenOSBrain:
         })
 
         try:
+            assert self._backend is not None
             resp = self._backend.chat(
                 model=self._model,
                 messages=self._messages,

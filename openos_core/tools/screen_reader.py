@@ -20,6 +20,8 @@ import subprocess
 import tempfile
 from pathlib import Path
 
+from typing import Any
+
 from openos_core.tools.base import BaseTool, tool_function
 
 
@@ -289,7 +291,7 @@ class ScreenReaderTool(BaseTool):
         # Use the vision-capable model
         model = config.llm.default_model
 
-        messages = [
+        messages: list[Any] = [
             {
                 "role": "system",
                 "content": (
