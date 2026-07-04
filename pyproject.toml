@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "openos"
-version = "0.2.0"
+version = "0.3.0"
 description = "OpenOS — A Debian-based AI Operating System with natural language control"
 readme = "README.md"
 license = {text = "GPL-3.0-or-later"}
